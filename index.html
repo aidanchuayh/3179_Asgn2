@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    /* Set the background color for the entire page to light blue */
+    body {
+      background-color: #ADD8E6; /* Light blue color */
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+
+    /* Styling to improve layout of the visualizations */
+    #proportional-symbol-map, #heatmap, #radial-plot {
+      margin-bottom: 30px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Domestic and International Passenger Volumes throughout the Years</h1>
+
+  <!-- Year Selector for Proportional Symbol Map and Radial Plot -->
+  <label for="year-selector">Select Year:</label>
+  <select id="year-selector">
+    <option value="2019">2019</option>
+    <option value="2020">2020</option>
+    <option value="2021">2021</option>
+    <option value="2022">2022</option>
+    <option value="2023" selected>2023</option>
+  </select>
+
+  <!-- Div for the Proportional Symbol Map -->
+  <div id="proportional-symbol-map"></div>
+
+  <!-- Airport Selector for Heatmap and Radial Plot -->
+  <label for="airport-selector">Select Airport (State):</label>
+  <select id="airport-selector">
+    <option value="ADELAIDE">ADELAIDE</option>
+    <option value="MELBOURNE" selected>MELBOURNE</option>
+    <option value="SYDNEY">SYDNEY</option>
+    <option value="PERTH">PERTH</option>
+    <option value="BRISBANE">BRISBANE</option>
+  </select>
+
+  <!-- Div for the Heatmap -->
+  <div id="heatmap"></div>
+
+  <!-- New Div for the Radial Plot -->
+  <div id="radial-plot"></div>
+
+  <!-- Include JavaScript to handle the Vega-Lite visualizations -->
+  <script src="vega_lite_vis_2.js"></script>
+</body>
+</html>

@@ -1,0 +1,70 @@
+```{r}
+# Load necessary libraries
+library(tidy)
+library(dplyr)
+
+# Check current working directory
+getwd()
+
+# Set the working directory (if needed)
+setwd("C:/Users/user/Documents/Desktop/FIT 3179/FIT3179_assignment_2")
+
+list.files()
+
+# Load the CSV file with full path
+df <- read.csv("C:/Users/user/Documents/Desktop/FIT 3179/FIT3179_assignment_2/
+               australia-airports.csv")
+
+# Check the first few rows of the data to verify it's loaded correctly
+head(df)
+
+# Create a lookup table for airport coordinates
+airport_coords <- data.frame(
+  AIRPORT = c("ADELAIDE", "ALICE SPRINGS", "BALLINA", "BRISBANE", 
+              "CAIRNS", "CANBERRA", "DARWIN", "GOLD COAST", 
+              "HAMILTON ISLAND", "HOBART", "KARRATHA", "LAUNCESTON", 
+              "MACKAY", "MELBOURNE", "NEWCASTLE", "PERTH", 
+              "PROSERPINE", "ROCKHAMPTON", "SUNSHINE COAST", "SYDNEY", 
+              "TOWNSVILLE"),
+  Latitude = c(-34.945, -23.8067, -28.8337, -27.3842, 
+               -16.8858, -35.3069, -12.4147, -28.1644, 
+               -20.3589, -42.8370, -20.7122, -41.5459, 
+               -21.1717, -37.6733, -32.7950, -31.9403, 
+               -20.4959, -23.3819, -26.6033, -33.9399, 
+               -19.2525),
+  Longitude = c(138.5306, 133.8862, 153.5619, 153.1175, 
+                145.7455, 149.1958, 130.8336, 153.3973, 
+                148.7553, 147.3257, 116.7733, 147.2148, 
+                149.4998, 144.8433, 151.8356, 115.9666, 
+                148.5522, 150.4759, 153.0911, 151.1753, 
+                146.7658)
+)
+
+# Merge the coordinates into the original dataset
+df <- merge(df, airport_coords, by = "AIRPORT", all.x = TRUE)
+
+# Remove rows where AIRPORT is 'All Australian Airports'
+df <- df[df$AIRPORT != 'All Australian Airports', ]
+
+# Check the updated data
+head(df)
+
+# Filter the data frame for the years 2019 to 2024
+df_filtered <- df %>%
+  filter(Year >= 2019 & Year <= 2024)
+
+# Remove any rows with NA in Pax_Total
+df_clean <- df_filtered %>%
+  filter(!is.na(Pax_Total)) # Filter out rows where Pax_Total is NA
+
+# Replace any missing or invalid Pax_Total values with 0 if necessary
+df_clean$Pax_Total[is.na(df_clean$Pax_Total)] <- 0
+
+# Check the cleaned data
+head(df_clean)
+
+# Export the cleaned data as a new CSV
+write.csv(df_clean, "australia-airports-coor-cleaned.csv", row.names = FALSE)
+
+
+```

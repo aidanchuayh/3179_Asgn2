@@ -1,0 +1,72 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "width": 800,
+  "height": 450,
+  "title": "Total Passenger Volume Across Australian Airports",
+  "projection": {"type": "equalEarth"},
+  "params": [
+    {
+      "name": "selectedYear",
+      "value": 2023,
+      "bind": {
+        "input": "select",
+        "options": [2019, 2020, 2021, 2022, 2023],
+        "name": "Select Year: "
+      }
+    }
+  ],
+  "layer": [
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/refs/heads/main/au-states.topojson",
+        "format": {"type": "topojson", "feature": "austates"}
+      },
+      "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "black"}
+    },
+    {
+      "data": {
+        "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv"
+      },
+      "transform": [
+        {"filter": "datum.Year == selectedYear"},
+        {"filter": "isValid(datum.Pax_Total)"}
+      ],
+      "mark": {
+        "type": "circle",
+        "tooltip": {"content": "data"},
+        "opacity": 0.7
+      },
+      "encoding": {
+        "tooltip": [
+        {"field": "AIRPORT", "type": "nominal", "title": "Airport State"},
+        {"field": "Year", "type": "quantitative", "title": "Year"},
+        {"field": "Dom_Pax_Total", "type": "quantitative", "title": "Total Domestic Passengers"},
+        {"field": "Int_Pax_Total", "type": "quantitative", "title": "TotalInternational Passengers"},
+        {"field": "Pax_Total", "type": "quantitative", "title": "Total Passengers"},
+        {"field": "Latitude", "type": "quantitative", "title": "Latitude"},
+        {"field": "Longitude", "type": "quantitative", "title": "Longitude"}
+        ],
+        "longitude": {"field": "Longitude", "type": "quantitative"},
+        "latitude": {"field": "Latitude", "type": "quantitative"},
+        "size": {
+          "field": "Pax_Total",
+          "type": "quantitative",
+          "title": "Total Passengers",
+          "scale": {
+            "domain": [0, 500000, 1000000, 1500000, 2000000, 2500000, 3000000, 3500000, 4000000],
+            "range": [50, 100, 150, 200, 250, 300, 350, 400, 450]
+          }
+        },
+        "color": {
+          "field": "Pax_Total",
+          "type": "quantitative",
+          "title": "Total Passengers",
+          "scale": {
+            "scheme": "reds",
+            "domain": [0, 500000, 1000000, 1500000, 2000000, 4000000]
+          }
+        }
+      }
+    }
+  ]
+}

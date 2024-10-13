@@ -1,0 +1,57 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "data": {
+      "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv",
+      "format": {"type": "csv"}
+    },
+    "title": "Daily Domestic and International Travellers by Airport",
+    "params": [
+      {
+        "name": "selectedAirport",
+        "value": "MELBOURNE",
+        "bind": {
+          "input": "select",
+          "options": ["ADELAIDE", "MELBOURNE", "SYDNEY", "PERTH", "BRISBANE"],
+          "name": "Select Airport: "
+        }
+      }
+    ],
+    "transform": [
+      {
+        "filter": "datum.AIRPORT == selectedAirport"
+      }
+    ],
+    "config": {
+      "view": {"strokeWidth": 0},
+      "axis": {"domain": false}
+    },
+    "width": 800,
+    "height": 500,
+    "mark": "rect",
+    "encoding": {
+      "x": {
+        "field": "Month",
+        "type": "ordinal",
+        "title": "Month",
+        "axis": {"labelAngle": 0}
+      },
+      "y": {
+        "field": "Year",
+        "type": "ordinal",
+        "title": "Year"
+      },
+      "color": {
+        "field": "Pax_Total",
+        "aggregate": "sum",
+        "type": "quantitative",
+        "scale": {
+          "scheme": "reds",
+          "domain": [0, 4000000]  
+        },
+        "legend": {
+          "title": "Total Pax"
+        }
+      }
+    }
+  }
+  

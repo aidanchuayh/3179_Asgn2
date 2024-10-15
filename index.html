@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    /* Navy blue background for the entire page */
+    body {
+      background-color: #1A2C42; /* Navy blue background */
+      margin: 0;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    /* Container with light blue background for the main content */
+    .outer-container {
+      background-color: #AEC6CF; /* Light blue background */
+      border-radius: 15px;
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+      padding: 20px;
+      width: 90%;
+      max-width: 1200px;
+      text-align: center;
+    }
+
+    .container {
+      margin: auto;
+    }
+
+    /* Title Image styling */
+    .title-image {
+      width:auto; /* Adjusts the width to 80% of the container width */
+      height: auto; /* Ensures the height scales proportionally */
+      max-height: 300px; /* Limits the height to make it shorter */
+      margin-bottom: 10px;
+    }
+
+    .section {
+      display: flex;
+      align-items: center;
+      margin-bottom: 20px;
+      gap: 20px;
+    }
+
+    .chart-container {
+      background-color: white;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      padding: 20px;
+      width: 60%;
+    }
+
+    .text-box {
+      width:40% ;
+      padding: 20px;
+      background-color: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      font-size: 1.1em;
+      font-family: 'Boboni';
+      color: #333;
+    }
+
+    .selector-container {
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+<body>
+  <div class="outer-container">
+    <!-- Title Image -->
+    <img src="australia_airports_title.png" alt="Australia Airports Title" class="title-image">
+
+    <div class="container">
+      <!-- Proportional Symbol Map Section -->
+      <div class="section" style="flex-direction: row;">
+        <div class="chart-container">
+          <h3>Annual Passenger Volume Across Australian Airports</h3>
+          <div id="proportional-symbol-map"></div>
+          <div class="selector-container">
+            <label for="psm-year-selector">Select Year:</label>
+            <select id="psm-year-selector">
+              <option value="2019">2019</option>
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023" selected>2023</option>
+            </select>
+          </div>
+        </div>
+        <div class="text-box">
+          <p>This is the proportional symbol map for the airports across Australia. From this, we can observe which airports receive the most passengers annually. The airports that seem to gain the most traffic in order of volume of passengers include Sydney, Melbourne, and Brisbane. This is largely due to the scale and economic impact each of these cities brings to Australia as these are high-density living areas, popular destination spots, and studying hubs for travelers and students alike.</p>
+        </div>
+      </div>
+
+      <!-- Heatmap Section -->
+       <!-- <div class="section" style="flex-direction: row-reverse;">
+        <div class="chart-container">
+          <h3>Monthly Domestic and International Travellers by Airport per Year</h3>
+          <div id="heatmap"></div>
+          <div class="selector-container">
+            <label for="heatmap-airport-selector">Select Airport:</label>
+            <select id="heatmap-airport-selector">
+              <option value="ADELAIDE">ADELAIDE</option>
+              <option value="BALLINA">BALLINA</option>
+              <option value="BRISBANE">BRISBANE</option>
+              <option value="CAIRNS">CAIRNS</option>
+              <option value="CANBERRA">CANBERRA</option>
+              <option value="DARWIN">DARWIN</option>
+              <option value="GOLD COAST">GOLD COAST</option>
+              <option value="HAMILTON ISLAND">HAMILTON ISLAND</option>
+              <option value="HOBART">HOBART</option>
+              <option value="KARRATHA">KARRATHA</option>
+              <option value="LAUNCESTON">LAUNCESTON</option>
+              <option value="MACKAY">MACKAY</option>
+              <option value="MELBOURNE" selected>MELBOURNE</option>
+              <option value="NEWCASTLE">NEWCASTLE</option>
+              <option value="PERTH">PERTH</option>
+              <option value="PROSERPINE">PROSERPINE</option>
+              <option value="ROCKHAMPTON">ROCKHAMPTON</option>
+              <option value="SUNSHINE COAST">SUNSHINE COAST</option>
+              <option value="SYDNEY">SYDNEY</option>
+              <option value="TOWNSVILLE">TOWNSVILLE</option>
+            </select>
+          </div>
+        </div>
+        <div class="text-box">
+          <p>The heatmap represents the monthly total of domestic and international travelers at a selected airport. Change the airport to view data for different locations, and explore the seasonality in travel patterns.</p>
+        </div>
+      </div>  -->
+
+      <!-- Donut Chart Section -->
+      <div class="section" style="flex-direction: row-reverse;">
+        <div class="chart-container">
+          <h3>Monthly Airport Passenger Volumes across Airports</h3>
+          <div id="donut-chart"></div>
+          <div class="selector-container">
+            <label for="donut-year-selector">Select Year:</label>
+            <select id="donut-year-selector">
+              <option value="2019">2019</option>
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023" selected>2023</option>
+            </select>
+            <label for="donut-airport-selector">Select Airport:</label>
+            <select id="donut-airport-selector">
+              <option value="ADELAIDE">ADELAIDE</option>
+              <option value="BALLINA">BALLINA</option>
+              <option value="BRISBANE">BRISBANE</option>
+              <option value="CAIRNS">CAIRNS</option>
+              <option value="CANBERRA">CANBERRA</option>
+              <option value="DARWIN">DARWIN</option>
+              <option value="GOLD COAST">GOLD COAST</option>
+              <option value="HAMILTON ISLAND">HAMILTON ISLAND</option>
+              <option value="HOBART">HOBART</option>
+              <option value="KARRATHA">KARRATHA</option>
+              <option value="LAUNCESTON">LAUNCESTON</option>
+              <option value="MACKAY">MACKAY</option>
+              <option value="MELBOURNE" selected>MELBOURNE</option>
+              <option value="NEWCASTLE">NEWCASTLE</option>
+              <option value="PERTH">PERTH</option>
+              <option value="PROSERPINE">PROSERPINE</option>
+              <option value="ROCKHAMPTON">ROCKHAMPTON</option>
+              <option value="SUNSHINE COAST">SUNSHINE COAST</option>
+              <option value="SYDNEY">SYDNEY</option>
+              <option value="TOWNSVILLE">TOWNSVILLE</option>
+            </select>
+          </div>
+        </div>
+        <div class="text-box">
+          <p>TUsing the donut chart we have here we can analyze which months of the year see the most traffic. We seem to see a common trend of having more travelers over October, November, and December. This makes sense as people tend to take leave to travel to and from Australia over the holiday season. Another thing to notice is that there are significantly fewer people traveling during January and February as that is when most people start work/ school.</p>
+        </div>
+      </div>
+
+      <!-- Diverging Bar Chart Section -->
+      <div class="section" style="flex-direction: row;">
+        <div class="chart-container">
+          <h3>Comparing the number of domestic to international passengers</h3>
+          <div id="diverging-bar-chart"></div>
+          <div class="selector-container">
+            <label for="bar-year-selector">Select Year:</label>
+            <select id="bar-year-selector">
+              <option value="2019">2019</option>
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023" selected>2023</option>
+            </select>
+            <label for="bar-airport-selector">Select Airport:</label>
+            <select id="bar-airport-selector">
+              <option value="ADELAIDE">ADELAIDE</option>
+              <option value="BALLINA">BALLINA</option>
+              <option value="BRISBANE">BRISBANE</option>
+              <option value="CAIRNS">CAIRNS</option>
+              <option value="CANBERRA">CANBERRA</option>
+              <option value="DARWIN">DARWIN</option>
+              <option value="GOLD COAST">GOLD COAST</option>
+              <option value="HAMILTON ISLAND">HAMILTON ISLAND</option>
+              <option value="HOBART">HOBART</option>
+              <option value="KARRATHA">KARRATHA</option>
+              <option value="LAUNCESTON">LAUNCESTON</option>
+              <option value="MACKAY">MACKAY</option>
+              <option value="MELBOURNE" selected>MELBOURNE</option>
+              <option value="NEWCASTLE">NEWCASTLE</option>
+              <option value="PERTH">PERTH</option>
+              <option value="PROSERPINE">PROSERPINE</option>
+              <option value="ROCKHAMPTON">ROCKHAMPTON</option>
+              <option value="SUNSHINE COAST">SUNSHINE COAST</option>
+              <option value="SYDNEY">SYDNEY</option>
+              <option value="TOWNSVILLE">TOWNSVILLE</option>
+            </select>
+          </div>
+        </div>
+        <div class="text-box">
+          <p>Here we used a diverging stacked bar chart to compare the number of domestic to international passengers each airport and in turn each city is receiving. Unsurprisingly cities that are popular tourist locations and study locations see the most international passengers. These include Melbourne, Sydney, Brisbane, Adelaide, Perth and the Gold Coast. While the other lesser-known states seem to have little to no international passengers. </p>
+        </div>
+      </div>
+
+      <!-- Stacked Area Chart Section -->
+      <div class="section" style="flex-direction: row-reverse;">
+        <div class="chart-container">
+          <h3>Comparing monthly Airport Volumes</h3>
+          <div id="stacked-area-chart"></div>
+          <div class="selector-container">
+            <label for="area-year-selector">Select Year:</label>
+            <select id="area-year-selector">
+              <option value="2019">2019</option>
+              <option value="2020">2020</option>
+              <option value="2021">2021</option>
+              <option value="2022">2022</option>
+              <option value="2023" selected>2023</option>
+            </select>
+          </div>
+        </div>
+        <div class="text-box">
+          <p>Finally, we will take a look at the stacked area chart. Looking at the general shape of the graph we see that there is always a decrease in travelers during the month of February. The only real exception was in 2020 as the pandemic started, looking through this visualization also allows us to understand the extent to which the covid pandemic affected Australian airports and their passengers.</p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+  <script src="vega_lite_vis_2.js"></script>
+</body>
+</html>

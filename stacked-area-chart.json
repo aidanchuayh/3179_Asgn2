@@ -1,0 +1,61 @@
+{
+    "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+    "width": 800,
+    "height": 400,
+    "data": {
+      "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv",
+      "format": {"type": "csv"}
+    },
+    "title": "Monthly Passenger Volume by Airport",
+    "mark": "area",
+    "params": [
+      {
+        "name": "selectedYear",
+        "value": 2023,
+        "bind": {
+          "input": "select",
+          "options": [2019, 2020, 2021, 2022, 2023],
+          "name": "Select Year: "
+        }
+      },
+      {
+        "name": "airportSelection",
+        "select": {"type": "point", "fields": ["AIRPORT"]},
+        "bind": "legend"
+      }
+    ],
+    "transform": [
+      {"filter": "datum.Year == selectedYear"}
+    ],
+    "encoding": {
+      "x": {
+        "field": "Month",
+        "type": "ordinal",
+        "title": "Month",
+        "axis": {"labelAngle": 0},
+        "sort": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"] 
+      },
+      "y": {
+        "aggregate": "sum",
+        "field": "Pax_Total",
+        "stack": "center",
+        "title": "Total Passengers"
+      },
+      "color": {
+        "field": "AIRPORT",
+        "type": "nominal",
+        "title": "Airport",
+        "scale": {"scheme": "category20b"}
+      },
+      "opacity": {
+        "condition": {"param": "airportSelection", "value": 1},
+        "value": 0.3
+      },
+      "tooltip": [
+        {"field": "AIRPORT", "type": "nominal", "title": "Airport"},
+        {"field": "Month", "type": "ordinal", "title": "Month"},
+        {"field": "Pax_Total", "type": "quantitative", "aggregate": "sum", "title": "Total Passengers"}
+      ]
+    }
+  }
+  

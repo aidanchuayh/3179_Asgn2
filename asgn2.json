@@ -1,0 +1,142 @@
+{
+  "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+  "vconcat": [
+    {
+      "width": 500,
+      "height": 450,
+      "projection": {"type": "equalEarth"},
+      "data": {
+        "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/refs/heads/main/au-states.topojson",
+        "format": {"type": "topojson", "feature": "austates"}
+      },
+      "layer": [
+        {
+          "mark": {"type": "geoshape", "fill": "lightgray", "stroke": "black"}
+        },
+        {
+          "data": {
+            "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv"
+          },
+          "transform": [
+            {"filter": "datum.Year == 2023"},
+            {"filter": "isValid(datum.Pax_Total)"}
+          ],
+          "mark": {"type": "circle", "opacity": 0.8},
+          "encoding": {
+            "longitude": {"field": "Longitude", "type": "quantitative"},
+            "latitude": {"field": "Latitude", "type": "quantitative"},
+            "size": {"field": "Pax_Total", "type": "quantitative", "scale": {"domain": [0, 4000000], "range": [0, 5000]}},
+            "color": {"field": "Pax_Total", "type": "quantitative", "scale": {"scheme": "oranges"}},
+            "tooltip": [
+              {"field": "AIRPORT", "type": "nominal"},
+              {"field": "Year", "type": "quantitative"},
+              {"field": "Pax_Total", "type": "quantitative", "title": "Total Passengers"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "width": 515,
+      "height": 450,
+      "data": {
+        "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv",
+        "format": {"type": "csv"}
+      },
+      "transform": [{"filter": "datum.AIRPORT == 'MELBOURNE'"}],
+      "mark": "rect",
+      "encoding": {
+        "x": {"field": "Month", "type": "ordinal", "title": "Month", "axis": {"labelAngle": 0}},
+        "y": {"field": "Year", "type": "ordinal", "title": "Year"},
+        "color": {
+          "field": "Pax_Total",
+          "aggregate": "sum",
+          "type": "quantitative",
+          "scale": {"scheme": "oranges", "domain": [0, 4000000]},
+          "legend": {"title": "Total Pax"}
+        }
+      }
+    },
+    {
+      "width": 590,
+      "height": 450,
+      "data": {
+        "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv",
+        "format": {"type": "csv"}
+      },
+      "transform": [
+        {"filter": "datum.Year == 2023"},
+        {"filter": "datum.AIRPORT == 'MELBOURNE'"}
+      ],
+      "layer": [
+        {
+          "mark": {"type": "arc", "innerRadius": 80, "stroke": "#fff"},
+          "encoding": {
+            "theta": {"field": "Pax_Total", "type": "quantitative", "stack": true},
+            "color": {
+              "field": "Month",
+              "type": "ordinal",
+              "scale": {"scheme": "category20b"},
+              "title": "Month",
+              "sort": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+            },
+            "tooltip": [
+              {"field": "Month", "type": "ordinal", "title": "Month"},
+              {"field": "Pax_Total", "type": "quantitative", "title": "Total Passengers"}
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "width": 440,
+      "height": 450,
+      "data": {
+        "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv",
+        "format": {"type": "csv"}
+      },
+      "transform": [
+        {"filter": "datum.Year == 2023"},
+        {"filter": "datum.AIRPORT == 'MELBOURNE'"},
+        {"fold": ["Dom_Pax_Total", "Int_Pax_Total"], "as": ["Passenger_Type", "Passengers"]},
+        {
+          "calculate": "datum.Passenger_Type == 'Int_Pax_Total' ? 'Total International Passengers' : 'Total Domestic Passengers'",
+          "as": "Passenger_Type"
+        },
+        {"calculate": "datum.Passenger_Type == 'Total International Passengers' ? datum.Passengers : -datum.Passengers", "as": "Passengers"},
+        {"calculate": "abs(datum.Passengers)", "as": "Passengers_Positive"}
+      ],
+      "mark": "bar",
+      "encoding": {
+        "x": {"field": "Passengers", "type": "quantitative", "title": "Number of Passengers", "axis": {"grid": false}},
+        "y": {"field": "Month", "type": "ordinal", "title": "Month", "sort": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]},
+        "color": {
+          "field": "Passenger_Type",
+          "type": "nominal",
+          "scale": {"domain": ["Total International Passengers", "Total Domestic Passengers"], "range": ["#d8b365", "#5ab4ac"]},
+          "title": "Passenger Type"
+        },
+        "tooltip": [
+          {"field": "Month", "type": "ordinal", "title": "Month"},
+          {"field": "Passenger_Type", "type": "nominal", "title": "Type"},
+          {"field": "Passengers_Positive", "type": "quantitative", "title": "Passengers"}
+        ]
+      }
+    },
+    {
+      "width": 535,
+      "height": 450,
+      "data": {
+        "url": "https://raw.githubusercontent.com/aidanchuayh/3179_Asgn2/main/australia-airports-coor-cleaned.csv",
+        "format": {"type": "csv"}
+      },
+      "transform": [{"filter": "datum.Year == 2023"}],
+      "mark": "area",
+      "encoding": {
+        "x": {"field": "Month", "type": "ordinal", "title": "Month", "sort": ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]},
+        "y": {"aggregate": "sum", "field": "Pax_Total", "stack": "center", "title": "Total Passengers"},
+        "color": {"field": "AIRPORT", "type": "nominal", "title": "Airport", "scale": {"scheme": "category20b"}}
+      }
+    }
+  ]
+}
